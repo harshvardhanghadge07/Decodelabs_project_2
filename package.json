@@ -1,0 +1,13 @@
+{
+  "name": "poll-voting-api",
+  "version": "1.0.0",
+  "description": "A simple Poll/Voting backend API - Project 2, DecodeLabs Full Stack Training",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
