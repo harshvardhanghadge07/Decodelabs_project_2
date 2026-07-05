@@ -1,141 +1,204 @@
-# Poll / Voting API
+# 🗳️ Poll Voting API
 
-A simple backend API for creating polls, casting votes, and viewing results — built with Node.js and Express.
+A RESTful API built with **Node.js**, **Express.js**, and **MongoDB** that allows users to create polls, vote on options, and retrieve poll results.
 
-Project 2 — DecodeLabs Full Stack Training (Backend API Development)
+## 🚀 Features
 
-## Features
+- Create new polls
+- Get all polls
+- Get a poll by ID
+- Vote on poll options
+- View poll results
+- RESTful API architecture
+- MongoDB database integration
+- Error handling and validation
 
-- Create polls with a question and multiple options
-- List all polls / fetch a single poll
-- Vote on a poll option
-- View tallied results with percentages
-- Delete a poll
-- Input validation on every write endpoint
-- Proper HTTP status codes (200, 201, 204, 400, 404, 500)
+---
 
-## Setup
+## 🛠️ Tech Stack
+
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+- JavaScript
+- Postman (API Testing)
+
+---
+
+## 📂 Project Structure
+
+```
+poll-voting-api/
+│
+├── controllers/
+├── middleware/
+├── models/
+├── routes/
+├── node_modules/
+├── .gitignore
+├── package.json
+├── package-lock.json
+├── README.md
+└── server.js
+```
+
+---
+
+## 📦 Installation
+
+### Clone the repository
+
+```bash
+git clone https://github.com/harshvardhanghadge07/Decodelabs_project_2.git
+```
+
+### Navigate into the project
+
+```bash
+cd Decodelabs_project_2
+```
+
+### Install dependencies
 
 ```bash
 npm install
-npm start
 ```
 
-The server runs on `http://localhost:3000` by default (set the `PORT` env var to change it).
+---
 
-For auto-restart on file changes during development:
+## ⚙️ Environment Variables
+
+Create a `.env` file in the root directory.
+
+Example:
+
+```env
+PORT=5000
+MONGODB_URI=your_mongodb_connection_string
+```
+
+---
+
+## ▶️ Run the Project
+
+Development mode
 
 ```bash
 npm run dev
 ```
 
-## Data model
-
-Data is stored in memory (a JS array), so it resets whenever the server restarts. This keeps the project focused on API design rather than database setup — a natural next step would be swapping `models/pollStore.js` for a real database.
-
-```
-Poll
-├── id           (string, UUID)
-├── question     (string)
-├── options[]
-│   ├── id       (string, UUID)
-│   ├── text     (string)
-│   └── votes    (number)
-└── createdAt    (ISO timestamp)
-```
-
-## Endpoints
-
-| Method | Route                | Description                          |
-|--------|----------------------|--------------------------------------|
-| POST   | `/polls`             | Create a new poll                    |
-| GET    | `/polls`             | List all polls                       |
-| GET    | `/polls/:id`         | Get a single poll                    |
-| DELETE | `/polls/:id`         | Delete a poll                        |
-| POST   | `/polls/:id/vote`    | Cast a vote for an option            |
-| GET    | `/polls/:id/results` | Get vote counts + percentages        |
-
-## Example requests
-
-**Create a poll**
+or
 
 ```bash
-curl -X POST http://localhost:3000/polls \
-  -H "Content-Type: application/json" \
-  -d '{"question":"Best pizza topping?","options":["Pepperoni","Mushroom","Pineapple"]}'
+node server.js
 ```
 
-Response — `201 Created`:
+---
+
+## 📌 API Endpoints
+
+### Create Poll
+
+```
+POST /api/polls
+```
+
+### Get All Polls
+
+```
+GET /api/polls
+```
+
+### Get Poll by ID
+
+```
+GET /api/polls/:id
+```
+
+### Vote
+
+```
+POST /api/polls/:id/vote
+```
+
+### Get Poll Results
+
+```
+GET /api/polls/:id/results
+```
+
+---
+
+## 📸 Sample Request
 
 ```json
 {
-  "id": "3f2786f1-8e74-4c53-916f-c197f49aaffe",
-  "question": "Best pizza topping?",
+  "question": "Which programming language do you like the most?",
   "options": [
-    { "id": "639f002b-...", "text": "Pepperoni", "votes": 0 },
-    { "id": "26910853-...", "text": "Mushroom", "votes": 0 },
-    { "id": "6ba94ad7-...", "text": "Pineapple", "votes": 0 }
-  ],
-  "createdAt": "2026-07-04T13:57:18.861Z"
-}
-```
-
-**Vote on an option**
-
-```bash
-curl -X POST http://localhost:3000/polls/{pollId}/vote \
-  -H "Content-Type: application/json" \
-  -d '{"optionId":"639f002b-6f5d-439c-8443-de369f8e6463"}'
-```
-
-**Get results**
-
-```bash
-curl http://localhost:3000/polls/{pollId}/results
-```
-
-```json
-{
-  "id": "3f2786f1-8e74-4c53-916f-c197f49aaffe",
-  "question": "Best pizza topping?",
-  "totalVotes": 2,
-  "options": [
-    { "id": "639f002b-...", "text": "Pepperoni", "votes": 2, "percentage": 100 },
-    { "id": "26910853-...", "text": "Mushroom", "votes": 0, "percentage": 0 },
-    { "id": "6ba94ad7-...", "text": "Pineapple", "votes": 0, "percentage": 0 }
+    "JavaScript",
+    "Python",
+    "Java",
+    "C++"
   ]
 }
 ```
 
-## Validation rules
+---
 
-| Case                                   | Response                     |
-|-----------------------------------------|-------------------------------|
-| Empty/missing `question`                | `400 Bad Request`             |
-| Fewer than 2 `options`, or blank options | `400 Bad Request`             |
-| Missing/invalid `optionId` on vote       | `400 Bad Request`             |
-| `optionId` doesn't belong to the poll    | `400 Bad Request`             |
-| Poll `id` not found                      | `404 Not Found`               |
-| Malformed JSON body                      | `400 Bad Request`             |
-| Unhandled route                          | `404 Not Found`               |
-| Uncaught server error                     | `500 Internal Server Error`   |
+## 📤 Sample Response
 
-## Project structure
-
+```json
+{
+  "success": true,
+  "message": "Poll created successfully",
+  "data": {
+    "_id": "...",
+    "question": "Which programming language do you like the most?",
+    "options": [
+      {
+        "text": "JavaScript",
+        "votes": 0
+      },
+      {
+        "text": "Python",
+        "votes": 0
+      }
+    ]
+  }
+}
 ```
-poll-voting-api/
-├── server.js                    # App entry point
-├── routes/polls.js              # Route definitions
-├── controllers/pollController.js # Request handling + validation
-├── models/pollStore.js          # In-memory data + business logic
-├── middleware/errorHandler.js   # 404 + centralized error handling
-└── package.json
-```
 
-## Ideas to extend it (for portfolio credit)
+---
 
-- Add a `PATCH /polls/:id` to edit a poll's question
-- Prevent duplicate votes per user (e.g., via an `X-User-Id` header or IP tracking)
-- Add poll expiry (`closesAt` field, reject votes after that time with `403`)
-- Swap the in-memory store for SQLite/MongoDB
-- Add pagination to `GET /polls`
+## 🧪 Testing
+
+Use **Postman** or any REST client to test the API.
+
+---
+
+## 📖 Future Improvements
+
+- User Authentication
+- JWT Authorization
+- Poll Expiry
+- Prevent Duplicate Votes
+- Admin Dashboard
+- Swagger API Documentation
+- Docker Support
+
+---
+
+## 👨‍💻 Author
+
+**Harshvardhan Ghadge**
+
+GitHub: https://github.com/harshvardhanghadge07
+
+LinkedIn: *(Add your LinkedIn profile here)*
+
+---
+
+## ⭐ Support
+
+If you found this project helpful, consider giving it a ⭐ on GitHub.
